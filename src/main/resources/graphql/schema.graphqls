@@ -1,12 +1,29 @@
 type Query {
     findAllBrands: [Brand]
     findOneBrand (id: Int): Brand
+    findAllModels: [Model]
+    findOneModel (id: Int): Model
+}
+
+type Mutation {
+    saveBrand(name: String, country: Country): Brand
+    updateBrand(id: Int, name: String, country: Country): Brand
+    deleteBrand(id: Int): Brand
+    saveModel (brand_id: Int, name: String): Model
+    updateModel(id: Int, name: String): Model
+    deleteModel(id: Int): Model
 }
 
 type Brand {
     id: Int
     name: String
     country: Country
+    models: [Model]
+}
+
+type Model {
+    id: Int
+    name: String
 }
 
 enum Country {
