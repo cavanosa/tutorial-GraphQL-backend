@@ -1,5 +1,7 @@
 package com.tutorial.graphqlCRUD.service;
 
+import com.tutorial.graphqlCRUD.dto.BrandDto;
+import com.tutorial.graphqlCRUD.dto.ModelDto;
 import com.tutorial.graphqlCRUD.entity.Brand;
 import com.tutorial.graphqlCRUD.entity.Model;
 import com.tutorial.graphqlCRUD.enums.Country;
@@ -31,16 +33,16 @@ public class BrandService {
                 .orElseThrow(()->new RuntimeException("id not exists"));
     }
 
-    public Brand saveBrand(String name, Country country){
-        Brand brand = Brand.builder().name(name).country(country).build();
+    public Brand saveBrand(BrandDto dto){
+        Brand brand = Brand.builder().name(dto.getName()).country(dto.getCountry()).build();
         return brandRepository.save(brand);
     }
 
-    public Brand updateBrand(int id, String name, Country country){
+    public Brand updateBrand(int id, BrandDto dto){
         Brand brand = brandRepository.findById(id)
                 .orElseThrow(()->new RuntimeException("id not exists"));
-        brand.setName(name);
-        brand.setCountry(country);
+        brand.setName(dto.getName());
+        brand.setCountry(dto.getCountry());
         return brandRepository.save(brand);
     }
 
@@ -62,10 +64,10 @@ public class BrandService {
                 .orElseThrow(()->new RuntimeException("id not exists"));
     }
 
-    public Model saveModel(int brand_id, String name){
-        Brand brand = brandRepository.findById(brand_id)
+    public Model saveModel(ModelDto dto){
+        Brand brand = brandRepository.findById(dto.getBrand_id())
                 .orElseThrow(()->new RuntimeException("id not exists"));
-        return modelRepository.save(Model.builder().name(name).brand(brand).build());
+        return modelRepository.save(Model.builder().name(dto.getName()).brand(brand).build());
     }
 
     public Model updateModel(int id, String name){
@@ -85,11 +87,11 @@ public class BrandService {
 
     @PostConstruct
     private void loadData(){
-        saveBrand("Mercedes", Country.GER);
-        saveBrand("BMW", Country.GER);
-        saveBrand("Jaguar", Country.ENG);
-        saveModel(1, "Clase S");
-        saveModel(2, "Serie 5");
-        saveModel(3, "F pace");
+        saveBrand(new BrandDto("Mercedes", Country.GER));
+        saveBrand(new BrandDto("BMW", Country.GER));
+        saveBrand(new BrandDto("Jaguar", Country.ENG));
+        saveModel(new ModelDto(1, "Clase S"));
+        saveModel(new ModelDto(2, "Serie 5"));
+        saveModel(new ModelDto(3, "F Pace"));
     }
 }

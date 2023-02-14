@@ -1,5 +1,7 @@
 package com.tutorial.graphqlCRUD.controller;
 
+import com.tutorial.graphqlCRUD.dto.BrandDto;
+import com.tutorial.graphqlCRUD.dto.ModelDto;
 import com.tutorial.graphqlCRUD.entity.Brand;
 import com.tutorial.graphqlCRUD.entity.Model;
 import com.tutorial.graphqlCRUD.enums.Country;
@@ -29,13 +31,13 @@ public class BrandController {
     }
 
     @MutationMapping
-    public Brand saveBrand(@Argument String name, @Argument Country country){
-        return brandService.saveBrand(name, country);
+    public Brand saveBrand(@Argument BrandDto dto){
+        return brandService.saveBrand(dto);
     }
 
     @MutationMapping
-    public Brand updateBrand(@Argument int id, @Argument String name, @Argument Country country){
-        return brandService.updateBrand(id, name, country);
+    public Brand updateBrand(@Argument int id, @Argument BrandDto dto){
+        return brandService.updateBrand(id,dto);
     }
 
     @MutationMapping
@@ -56,8 +58,8 @@ public class BrandController {
     }
 
     @MutationMapping
-    public Model saveModel(@Argument int brand_id, @Argument String name){
-        return brandService.saveModel(brand_id, name);
+    public Model saveModel(@Argument ModelDto dto){
+        return brandService.saveModel(dto);
     }
 
     @MutationMapping

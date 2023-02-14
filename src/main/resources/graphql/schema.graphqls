@@ -6,10 +6,10 @@ type Query {
 }
 
 type Mutation {
-    saveBrand(name: String, country: Country): Brand
-    updateBrand(id: Int, name: String, country: Country): Brand
+    saveBrand(dto: BrandDto): Brand
+    updateBrand(id: Int, dto: BrandDto): Brand
     deleteBrand(id: Int): Brand
-    saveModel (brand_id: Int, name: String): Model
+    saveModel (dto: ModelDto): Model
     updateModel(id: Int, name: String): Model
     deleteModel(id: Int): Model
 }
@@ -32,3 +32,15 @@ enum Country {
     ES
     JAP
 }
+
+input BrandDto {
+    name: String
+    country: Country
+}
+
+input ModelDto{
+    brand_id: Int
+    name: String
+}
+
+
