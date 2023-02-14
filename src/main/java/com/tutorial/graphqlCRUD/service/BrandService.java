@@ -11,7 +11,10 @@ import jakarta.annotation.PostConstruct;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
 
+import java.time.Duration;
 import java.util.List;
 
 @Service
@@ -51,6 +54,15 @@ public class BrandService {
                 .orElseThrow(()->new RuntimeException("id not exists"));
         brandRepository.delete(brand);
         return brand;
+    }
+
+    public Flux<Brand> findAllBrandsFlux(){
+        return Flux.fromStream(findAllBrands().stream())
+                .delayElements(Duration.ofSeconds(1)).take(10);
+    }
+
+    public Mono<Brand> findOneMono(int id){
+        return Mono.justOrEmpty(brandRepository.findById(id));
     }
 
     // MODEL

@@ -14,6 +14,11 @@ type Mutation {
     deleteModel(id: Int): Model
 }
 
+type Subscription {
+    findAllBrandsFlux: Brand
+    findOneBrandsMono(id: Int): Brand
+}
+
 type Brand {
     id: Int
     name: String
