@@ -16,6 +16,7 @@ import reactor.core.publisher.Mono;
 
 import java.time.Duration;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @Slf4j
@@ -37,6 +38,9 @@ public class BrandService {
     }
 
     public Brand saveBrand(BrandDto dto){
+        Optional<Brand> brandOpt = brandRepository.findByName(dto.getName());
+        if(brandOpt.isPresent())
+            throw new RuntimeException("brand name already in use");
         Brand brand = Brand.builder().name(dto.getName()).country(dto.getCountry()).build();
         return brandRepository.save(brand);
     }
@@ -44,6 +48,9 @@ public class BrandService {
     public Brand updateBrand(int id, BrandDto dto){
         Brand brand = brandRepository.findById(id)
                 .orElseThrow(()->new RuntimeException("id not exists"));
+        Optional<Brand> brandOpt = brandRepository.findByName(dto.getName());
+        if(brandOpt.isPresent() && brandOpt.get().getId() != id)
+            throw new RuntimeException("brand name already in use");
         brand.setName(dto.getName());
         brand.setCountry(dto.getCountry());
         return brandRepository.save(brand);
@@ -62,7 +69,8 @@ public class BrandService {
     }
 
     public Mono<Brand> findOneMono(int id){
-        return Mono.justOrEmpty(brandRepository.findById(id));
+        return Mono.justOrEmpty(brandRepository.findById(id))
+                .switchIfEmpty(Mono.error(new RuntimeException("brand not found")));
     }
 
     // MODEL
@@ -77,12 +85,18 @@ public class BrandService {
     }
 
     public Model saveModel(ModelDto dto){
+        Optional<Model> modelOpt = modelRepository.findByName(dto.getName());
+        if(modelOpt.isPresent())
+            throw new RuntimeException("model name already in use");
         Brand brand = brandRepository.findById(dto.getBrand_id())
                 .orElseThrow(()->new RuntimeException("id not exists"));
         return modelRepository.save(Model.builder().name(dto.getName()).brand(brand).build());
     }
 
     public Model updateModel(int id, String name){
+        Optional<Model> modelOpt = modelRepository.findByName(name);
+        if(modelOpt.isPresent() && modelOpt.get().getId() != id)
+            throw new RuntimeException("model name already in use");
         Model model = modelRepository.findById(id)
                 .orElseThrow(()->new RuntimeException("id not exists"));
         model.setName(name);
