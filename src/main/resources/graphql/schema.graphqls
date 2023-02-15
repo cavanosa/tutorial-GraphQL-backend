@@ -1,3 +1,5 @@
+directive @NotBlank(message: String = "name is mandatory") on ARGUMENT_DEFINITION | INPUT_FIELD_DEFINITION
+
 type Query {
     findAllBrands: [Brand]
     findOneBrand (id: Int): Brand
@@ -10,7 +12,7 @@ type Mutation {
     updateBrand(id: Int, dto: BrandDto): Brand
     deleteBrand(id: Int): Brand
     saveModel (dto: ModelDto): Model
-    updateModel(id: Int, name: String): Model
+    updateModel(id: Int, name: String @NotBlank): Model
     deleteModel(id: Int): Model
 }
 
@@ -39,13 +41,13 @@ enum Country {
 }
 
 input BrandDto {
-    name: String
+    name: String @NotBlank
     country: Country
 }
 
 input ModelDto{
     brand_id: Int
-    name: String
+    name: String @NotBlank
 }
 
 
